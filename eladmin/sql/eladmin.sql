@@ -3,15 +3,15 @@
 
  Source Server         : mysql
  Source Server Type    : MySQL
- Source Server Version : 80025 (8.0.25)
+ Source Server Version : 80031 (8.0.31)
  Source Host           : localhost:3306
  Source Schema         : eladmin
 
  Target Server Type    : MySQL
- Target Server Version : 80025 (8.0.25)
+ Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 10/07/2024 16:24:22
+ Date: 10/07/2024 16:28:26
 */
 
 SET NAMES utf8mb4;
@@ -23,21 +23,21 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `big_changes`;
 CREATE TABLE `big_changes`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `e_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '涉及企业名称',
+  `e_name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '涉及企业名称',
   `e_level` int NULL DEFAULT NULL COMMENT '涉及企业层级',
-  `risk_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '风险事件名称',
+  `risk_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '风险事件名称',
   `time` datetime NULL DEFAULT NULL COMMENT '事件发生时间',
   `is_abroad` tinyint NULL DEFAULT NULL COMMENT '是否境外',
   `is_lawsuit` tinyint NULL DEFAULT NULL COMMENT '是否涉诉',
   `r_category` tinyint NULL DEFAULT NULL COMMENT '风险类别',
   `r_sub_type` tinyint NULL DEFAULT NULL COMMENT '风险子类别',
   `money` int NULL DEFAULT NULL COMMENT '损失金额',
-  `progress` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '处置进展情况',
-  `s_description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '当期情况描述',
+  `progress` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '处置进展情况',
+  `s_description` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '当期情况描述',
   `belong_progress` tinyint NULL DEFAULT NULL COMMENT '所属的changes',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_sname`(`e_name` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of big_changes
@@ -47,7 +47,7 @@ INSERT INTO `big_changes` VALUES (2, '长沙市中医院', 1, '2024年财务数�
 INSERT INTO `big_changes` VALUES (3, '长沙企业联合会', 3, '2024年财务数据不准确', '2024-03-26 00:00:00', 1, 1, 1, 3, 25000, '待处理', '好', 1);
 INSERT INTO `big_changes` VALUES (4, '长沙市中心医院', 1, '2024年财务数据不准确', '2024-04-05 00:00:00', 1, 1, 1, 1, 40000, '正在处理', '好', 1);
 INSERT INTO `big_changes` VALUES (5, '长沙市社保局', 2, '2024年财务数据不准确', '2024-04-09 00:00:00', 1, 1, 1, 2, 35000, '正在处理', '好', 1);
-INSERT INTO `big_changes` VALUES (6, '长沙市人力资源局', 1, '2024年财务数据不准确', '2024-04-18 00:00:00', 1, 1, 1, NULL, 15000, '待处理', '好', 1);
+INSERT INTO `big_changes` VALUES (6, '长沙市人力资源局', 1, '2024年财务数据不准确', '2024-04-18 00:00:00', 1, 1, 1, 3, 15000, '待处理', '好', 1);
 
 -- ----------------------------
 -- Table structure for code_column_config
@@ -225,15 +225,15 @@ CREATE TABLE `mnt_server`  (
 DROP TABLE IF EXISTS `progress_report`;
 CREATE TABLE `progress_report`  (
   `id` int NOT NULL COMMENT '编号',
-  `review_status` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '审核状态',
-  `report_status` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '申请状态',
-  `related_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '涉及企业名称',
-  `thing_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '事件名称',
+  `review_status` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '审核状态',
+  `report_status` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '申请状态',
+  `related_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '涉及企业名称',
+  `thing_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '事件名称',
   `time` datetime NULL DEFAULT NULL COMMENT '事件发生时间',
-  `progress` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '处置进展情况',
+  `progress` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '处置进展情况',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `fk_table1_sname`(`related_name` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of progress_report
@@ -254,7 +254,7 @@ CREATE TABLE `risk`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
   `r_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '风险类别',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of risk
@@ -271,7 +271,7 @@ CREATE TABLE `sub_risk`  (
   `r_sub_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '风险子类别',
   `belong_type` tinyint NULL DEFAULT NULL COMMENT '风险子类别所属类别',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sub_risk
@@ -450,12 +450,12 @@ CREATE TABLE `sys_menu`  (
   UNIQUE INDEX `uniq_title`(`title` ASC) USING BTREE,
   UNIQUE INDEX `uniq_name`(`name` ASC) USING BTREE,
   INDEX `inx_pid`(`pid` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 120 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 118 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统菜单' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
-INSERT INTO `sys_menu` VALUES (1, NULL, 8, 0, '系统管理', NULL, NULL, 1, 'system', 'system', b'0', b'0', b'0', NULL, NULL, NULL, '2018-12-18 15:11:29', NULL);
+INSERT INTO `sys_menu` VALUES (1, NULL, 7, 0, '系统管理', NULL, NULL, 1, 'system', 'system', b'0', b'0', b'0', NULL, NULL, NULL, '2018-12-18 15:11:29', NULL);
 INSERT INTO `sys_menu` VALUES (2, 1, 3, 1, '用户管理', 'User', 'system/user/index', 2, 'peoples', 'user', b'0', b'0', b'0', 'user:list', NULL, NULL, '2018-12-18 15:14:44', NULL);
 INSERT INTO `sys_menu` VALUES (3, 1, 3, 1, '角色管理', 'Role', 'system/role/index', 3, 'role', 'role', b'0', b'0', b'0', 'roles:list', NULL, NULL, '2018-12-18 15:16:07', NULL);
 INSERT INTO `sys_menu` VALUES (5, 1, 3, 1, '菜单管理', 'Menu', 'system/menu/index', 5, 'menu', 'menu', b'0', b'0', b'0', 'menu:list', NULL, NULL, '2018-12-18 15:17:28', NULL);
@@ -531,8 +531,6 @@ INSERT INTO `sys_menu` VALUES (112, 98, 0, 2, '数据库新增', NULL, '', 999, 
 INSERT INTO `sys_menu` VALUES (113, 98, 0, 2, '数据库编辑', NULL, '', 999, '', '', b'0', b'0', b'0', 'database:edit', NULL, NULL, '2019-11-17 11:12:58', NULL);
 INSERT INTO `sys_menu` VALUES (114, 98, 0, 2, '数据库删除', NULL, '', 999, '', '', b'0', b'0', b'0', 'database:del', NULL, NULL, '2019-11-17 11:13:14', NULL);
 INSERT INTO `sys_menu` VALUES (116, 36, 0, 1, '生成预览', 'Preview', 'generator/preview', 999, 'java', 'generator/preview/:tableName', b'0', b'1', b'1', NULL, NULL, NULL, '2019-11-26 14:54:36', NULL);
-INSERT INTO `sys_menu` VALUES (118, 1, 1, 1, '重大变化/进展续报编制', 'Report', 'system/report/index', 3, 'tools', 'report', b'0', b'0', b'0', 'report:list', 'admin', 'admin', '2024-07-09 16:45:22', '2024-07-09 17:12:35');
-INSERT INTO `sys_menu` VALUES (119, 118, 0, 2, '新增续报', NULL, NULL, 1, NULL, NULL, b'0', b'0', b'0', 'report:add', 'admin', 'admin', '2024-07-09 16:53:17', '2024-07-09 16:53:17');
 
 -- ----------------------------
 -- Table structure for sys_quartz_job
@@ -790,7 +788,7 @@ CREATE TABLE `sys_users_jobs`  (
   `user_id` bigint NOT NULL COMMENT '用户ID',
   `job_id` bigint NOT NULL COMMENT '岗位ID',
   PRIMARY KEY (`user_id`, `job_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_users_jobs
