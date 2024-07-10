@@ -11,7 +11,7 @@
  Target Server Version : 80025 (8.0.25)
  File Encoding         : 65001
 
- Date: 10/07/2024 16:39:34
+ Date: 10/07/2024 16:41:10
 */
 
 SET NAMES utf8mb4;
@@ -410,7 +410,7 @@ CREATE TABLE `sys_log`  (
   PRIMARY KEY (`log_id`) USING BTREE,
   INDEX `log_create_time_index`(`create_time` ASC) USING BTREE,
   INDEX `inx_log_type`(`log_type` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3544 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统日志' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 3545 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统日志' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of sys_log
@@ -422,6 +422,7 @@ INSERT INTO `sys_log` VALUES (3540, '用户登录', 'ERROR', 'me.zhengjie.module
 INSERT INTO `sys_log` VALUES (3541, '用户登录', 'INFO', 'me.zhengjie.modules.security.rest.AuthorizationController.login()', '{\"username\":\"admin\"}', '192.168.43.193', 850, 'admin', '内网IP', 'Chrome 126', NULL, '2024-07-09 20:44:36');
 INSERT INTO `sys_log` VALUES (3542, '用户登录', 'INFO', 'me.zhengjie.modules.security.rest.AuthorizationController.login()', '{\"username\":\"admin\"}', '192.168.43.193', 382, 'admin', '内网IP', 'Chrome 126', NULL, '2024-07-10 14:02:15');
 INSERT INTO `sys_log` VALUES (3543, '用户登录', 'INFO', 'me.zhengjie.modules.security.rest.AuthorizationController.login()', '{\"username\":\"admin\"}', '192.168.43.193', 97, 'admin', '内网IP', 'Chrome 126', NULL, '2024-07-10 14:05:51');
+INSERT INTO `sys_log` VALUES (3544, '修改角色菜单', 'INFO', 'me.zhengjie.modules.system.rest.RoleController.updateRoleMenu()', '{\"dataScope\":\"本级\",\"id\":1,\"level\":3,\"menus\":[{\"id\":97,\"menuSort\":999,\"subCount\":0},{\"id\":98,\"menuSort\":999,\"subCount\":0},{\"id\":102,\"menuSort\":999,\"subCount\":0},{\"id\":103,\"menuSort\":999,\"subCount\":0},{\"id\":104,\"menuSort\":999,\"subCount\":0},{\"id\":105,\"menuSort\":999,\"subCount\":0},{\"id\":106,\"menuSort\":999,\"subCount\":0},{\"id\":107,\"menuSort\":999,\"subCount\":0},{\"id\":108,\"menuSort\":999,\"subCount\":0},{\"id\":109,\"menuSort\":999,\"subCount\":0},{\"id\":110,\"menuSort\":999,\"subCount\":0},{\"id\":111,\"menuSort\":999,\"subCount\":0},{\"id\":112,\"menuSort\":999,\"subCount\":0},{\"id\":113,\"menuSort\":999,\"subCount\":0},{\"id\":114,\"menuSort\":999,\"subCount\":0},{\"id\":116,\"menuSort\":999,\"subCount\":0},{\"id\":118,\"menuSort\":999,\"subCount\":0},{\"id\":119,\"menuSort\":999,\"subCount\":0},{\"id\":1,\"menuSort\":999,\"subCount\":0},{\"id\":2,\"menuSort\":999,\"subCount\":0},{\"id\":3,\"menuSort\":999,\"subCount\":0},{\"id\":5,\"menuSort\":999,\"subCount\":0},{\"id\":6,\"menuSort\":999,\"subCount\":0},{\"id\":7,\"menuSort\":999,\"subCount\":0},{\"id\":9,\"menuSort\":999,\"subCount\":0},{\"id\":10,\"menuSort\":999,\"subCount\":0},{\"id\":11,\"menuSort\":999,\"subCount\":0},{\"id\":14,\"menuSort\":999,\"subCount\":0},{\"id\":15,\"menuSort\":999,\"subCount\":0},{\"id\":18,\"menuSort\":999,\"subCount\":0},{\"id\":19,\"menuSort\":999,\"subCount\":0},{\"id\":21,\"menuSort\":999,\"subCount\":0},{\"id\":22,\"menuSort\":999,\"subCount\":0},{\"id\":23,\"menuSort\":999,\"subCount\":0},{\"id\":24,\"menuSort\":999,\"subCount\":0},{\"id\":27,\"menuSort\":999,\"subCount\":0},{\"id\":28,\"menuSort\":999,\"subCount\":0},{\"id\":30,\"menuSort\":999,\"subCount\":0},{\"id\":32,\"menuSort\":999,\"subCount\":0},{\"id\":33,\"menuSort\":999,\"subCount\":0},{\"id\":34,\"menuSort\":999,\"subCount\":0},{\"id\":35,\"menuSort\":999,\"subCount\":0},{\"id\":36,\"menuSort\":999,\"subCount\":0},{\"id\":37,\"menuSort\":999,\"subCount\":0},{\"id\":38,\"menuSort\":999,\"subCount\":0},{\"id\":39,\"menuSort\":999,\"subCount\":0},{\"id\":41,\"menuSort\":999,\"subCount\":0},{\"id\":44,\"menuSort\":999,\"subCount\":0},{\"id\":45,\"menuSort\":999,\"subCount\":0},{\"id\":46,\"menuSort\":999,\"subCount\":0},{\"id\":48,\"menuSort\":999,\"subCount\":0},{\"id\":49,\"menuSort\":999,\"subCount\":0},{\"id\":50,\"menuSort\":999,\"subCount\":0},{\"id\":52,\"menuSort\":999,\"subCount\":0},{\"id\":53,\"menuSort\":999,\"subCount\":0},{\"id\":54,\"menuSort\":999,\"subCount\":0},{\"id\":56,\"menuSort\":999,\"subCount\":0},{\"id\":57,\"menuSort\":999,\"subCount\":0},{\"id\":58,\"menuSort\":999,\"subCount\":0},{\"id\":60,\"menuSort\":999,\"subCount\":0},{\"id\":61,\"menuSort\":999,\"subCount\":0},{\"id\":62,\"menuSort\":999,\"subCount\":0},{\"id\":64,\"menuSort\":999,\"subCount\":0},{\"id\":65,\"menuSort\":999,\"subCount\":0},{\"id\":66,\"menuSort\":999,\"subCount\":0},{\"id\":73,\"menuSort\":999,\"subCount\":0},{\"id\":74,\"menuSort\":999,\"subCount\":0},{\"id\":75,\"menuSort\":999,\"subCount\":0},{\"id\":77,\"menuSort\":999,\"subCount\":0},{\"id\":78,\"menuSort\":999,\"subCount\":0},{\"id\":79,\"menuSort\":999,\"subCount\":0},{\"id\":80,\"menuSort\":999,\"subCount\":0},{\"id\":82,\"menuSort\":999,\"subCount\":0},{\"id\":83,\"menuSort\":999,\"subCount\":0},{\"id\":90,\"menuSort\":999,\"subCount\":0},{\"id\":92,\"menuSort\":999,\"subCount\":0},{\"id\":93,\"menuSort\":999,\"subCount\":0},{\"id\":94,\"menuSort\":999,\"subCount\":0}]}', '192.168.209.1', 98, 'admin', '内网IP', 'Chrome 126', NULL, '2024-07-10 16:40:42');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -611,7 +612,7 @@ CREATE TABLE `sys_role`  (
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES (1, '超级管理员', 1, '-', '全部', NULL, 'admin', '2018-11-23 11:04:37', '2020-08-06 16:10:24');
+INSERT INTO `sys_role` VALUES (1, '超级管理员', 1, '-', '全部', NULL, 'admin', '2018-11-23 11:04:37', '2024-07-10 16:40:42');
 INSERT INTO `sys_role` VALUES (2, '普通用户', 2, '-', '本级', NULL, 'admin', '2018-11-23 13:09:06', '2020-09-05 10:45:12');
 
 -- ----------------------------
@@ -719,6 +720,8 @@ INSERT INTO `sys_roles_menus` VALUES (112, 1);
 INSERT INTO `sys_roles_menus` VALUES (113, 1);
 INSERT INTO `sys_roles_menus` VALUES (114, 1);
 INSERT INTO `sys_roles_menus` VALUES (116, 1);
+INSERT INTO `sys_roles_menus` VALUES (118, 1);
+INSERT INTO `sys_roles_menus` VALUES (119, 1);
 INSERT INTO `sys_roles_menus` VALUES (120, 1);
 INSERT INTO `sys_roles_menus` VALUES (1, 2);
 INSERT INTO `sys_roles_menus` VALUES (2, 2);

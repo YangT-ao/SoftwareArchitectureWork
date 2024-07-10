@@ -9,7 +9,7 @@
           <el-option label="区域二" value="beijing"></el-option>
         </el-select>
         <el-input v-model="query.eventName" size="mini" clearable placeholder="事件名称" style="width: 200px;" @keyup.enter.native="toQuery" />
-        <el-input v-model="query.companyName" size="mini" clearable placeholder="输入职能部门或机构名称" style="width: 200px;" @keyup.enter.native="toQuery" />
+        <el-input v-model="query.relatedName" size="mini" clearable placeholder="输入职能部门或机构名称" style="width: 200px;" @keyup.enter.native="toQuery" />
         <el-button size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
         <el-button size="mini" type="warning" icon="el-icon-refresh-left" @click="resetQuery()">重置</el-button>
       </div>
@@ -122,16 +122,16 @@
     <el-dialog :visible.sync="mainFormMeta.visible" :title="mainFormMeta.title" width="800px">
       <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-position="right" label-width="150px">
         <div>
-          <el-form-item label="涉及企业名称" prop="companyName">
-            <el-input v-model="form.companyName" style="width: 200px" />
+          <el-form-item label="涉及企业名称" prop="relatedName">
+            <el-input v-model="form.relatedName" style="width: 200px" />
           </el-form-item>
           <el-form-item label="事件名称" prop="eventName">
             <el-input v-model="form.eventName" style="width: 200px" />
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="审核状态" prop="checkStatus">
-            <el-input v-model="form.checkStatus" style="width: 200px" />
+          <el-form-item label="审核状态" prop="reviewStatus">
+            <el-input v-model="form.reviewStatus" style="width: 200px" />
           </el-form-item>
           <el-form-item label="上报状态" prop="reportStatus">
             <el-select v-model="form.reportStatus" size="small" placeholder="涉及企业等级" style="width: 200px">
@@ -300,7 +300,7 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="id" label="序号" width="125px" />
-      <el-table-column prop="checkStatus" label="审核状态" align="center">
+      <el-table-column prop="reviewStatus" label="审核状态" align="center">
         <template v-slot:default="scope">
           <el-tag type="success">编制</el-tag>
         </template>
@@ -310,7 +310,7 @@
           <el-tag type="success">待上报</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="companyName" label="涉及企业名称(信用代码)" />
+      <el-table-column prop="relatedName" label="涉及企业名称(信用代码)" />
       <el-table-column prop="eventName" label="事件名称" />
       <el-table-column prop="happenTime" label="事件发生时间" />
       <el-table-column prop="progress" label="处置进展情况" />
@@ -348,9 +348,9 @@ export default {
         del: ['admin', 'menu:del']
       },
       query: {
-        checkStatus: '',
+        reviewStatus: '',
         eventName: '',
-        companyName: ''
+        relatedName: ''
       },
       page: {
         pageSize: 10,
@@ -374,9 +374,9 @@ export default {
       data: [
         {
           id: 1,
-          checkStatus: '编制',
+          reviewStatus: '编制',
           reportStatus: '待上报',
-          companyName: '长沙市人民政府国有资产监督管理委员会',
+          relatedName: '长沙市人民政府国有资产监督管理委员会',
           eventName: '风险事件名称',
           happenTime: '2021-01-01',
           progress: '处置进展情况'
@@ -427,9 +427,9 @@ export default {
       },
       form: {
         id: 1,
-        checkStatus: '编制',
+        reviewStatus: '编制',
         reportStatus: '待上报',
-        companyName: '长沙市人民政府国有资产监督管理委员会',
+        relatedName: '长沙市人民政府国有资产监督管理委员会',
         eventName: '风险事件名称',
         happenTime: '2021-01-01',
         progress: '处置进展情况'
