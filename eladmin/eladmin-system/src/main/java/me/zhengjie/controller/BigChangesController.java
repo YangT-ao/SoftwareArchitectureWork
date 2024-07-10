@@ -3,6 +3,7 @@ package me.zhengjie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import me.zhengjie.mapper.ProgressReportMapper;
 import me.zhengjie.mapper.RiskMapper;
 import me.zhengjie.mapper.SubRiskMapper;
@@ -35,28 +36,72 @@ public class BigChangesController {
     SubRiskMapper subRiskMapper;
 
     @GetMapping("/getAllData")
-    public Map<String, Object> getAllBigChanges(){
+    public Map<String, Object> getAllProgressReport(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "5") Integer pageSize){
         Map<String, Object> map = new HashMap<>();
         map.put("code", 200);
-        LambdaQueryWrapper<ProgressReport> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        List<ProgressReport> list = progressReportMapper.selectList(lambdaQueryWrapper);
-
-        map.put("data", list);
+        Page<ProgressReport> page = new Page<>(pageNum, pageSize);
+        progressReportMapper.selectPage(page, null);
+        map.put("data", page);
         return map;
     }
+
+    @PostMapping("/addData")
+    public Map<String, Object> addData(@RequestBody ProgressReport progressReport){
+        Map<String, Object> map = new HashMap<>();
+        int result = progressReportMapper.insert(progressReport);
+        if(result == 1){
+            map.put("code", 200);
+            map.put("msg", "添加成功");
+        }else{
+            map.put("code", -1);
+            map.put("msg", "添加失败");
+        }
+        return map;
+    }
+
+    @PostMapping("/updateData")
+    public Map<String, Object> updateData(@RequestBody ProgressReport progressReport){
+        Map<String, Object> map = new HashMap<>();
+        int result = progressReportMapper.updateById(progressReport);
+        if(result == 1){
+            map.put("code", 200);
+            map.put("msg", "更新成功");
+        }else{
+            map.put("code", -1);
+            map.put("msg", "更新失败");
+        }
+        return map;
+    }
+
+
 
     @GetMapping("/getAllSubData")
-    public Map<String, Object> getAllSubData(@RequestParam Integer id){
+    public Map<String, Object> getAllSubData(@RequestParam Integer id, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "5") Integer pageSize){
         Map<String, Object> map = new HashMap<>();
         map.put("code", 200);
+        Page<BigChanges> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<BigChanges> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(BigChanges::getBelongProgress, id);
-        List<BigChanges> list = bigChangesMapper.selectList(lambdaQueryWrapper);
-        map.put("data", list);
+        bigChangesMapper.selectPage(page, lambdaQueryWrapper);
+        map.put("data", page);
         return map;
     }
 
-    @GetMapping("/updateData")
+    @PostMapping("/addSubData")
+    public Map<String, Object> addSubData(@RequestBody BigChanges bigChanges){
+        Map<String, Object> map = new HashMap<>();
+        int result = bigChangesMapper.insert(bigChanges);
+        if(result == 1){
+            map.put("code", 200);
+            map.put("msg", "添加成功");
+        }else{
+            map.put("code", -1);
+            map.put("msg", "添加失败");
+        }
+        return map;
+    }
+
+    @PostMapping("/updateSubData")
     public Map<String, Object> updateData(@RequestBody BigChanges bigChanges){
         Map<String, Object> map = new HashMap<>();
         LambdaQueryWrapper<BigChanges> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -113,7 +158,7 @@ public class BigChangesController {
         LambdaQueryWrapper<BigChanges> lambdaQueryWrapper2 = new LambdaQueryWrapper<>();
         lambdaQueryWrapper2.eq(BigChanges::getBelongProgress, id);
         int result2 = bigChangesMapper.delete(lambdaQueryWrapper2);
-        if(result1 == 1 && result2 > 0){
+        if(result1 == 1 && result2 >= 0){
             map.put("code", 200);
             map.put("msg", "修改成功");
         }else{

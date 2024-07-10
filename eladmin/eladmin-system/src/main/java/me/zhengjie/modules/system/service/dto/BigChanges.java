@@ -1,5 +1,8 @@
 package me.zhengjie.modules.system.service.dto;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "big_changes")
 public class BigChanges {
+    @TableId(value = "id",type = IdType.AUTO)
     Integer id;
 
     String eName;
@@ -35,6 +39,7 @@ public class BigChanges {
 
     String sDescription;
 
+    @TableField(value = "belong_progress")
     Integer belongProgress;
 
     Integer rSubType;
