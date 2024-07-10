@@ -4,9 +4,10 @@
     <div class="head-container">
       <div v-if="searchOn">
         <!-- 搜索 -->
-        <el-select v-model="query.status" size="mini" placeholder="状态" style="width: 120px;">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="query.reviewStatus" size="mini" clearable placeholder="审核状态" style="width: 120px;">
+          <el-option label="编制" value="编制"></el-option>
+          <el-option label="退回" value="退回"></el-option>
+          <el-option label="撤回" value="撤回"></el-option>
         </el-select>
         <el-input v-model="query.thingName" size="mini" clearable placeholder="事件名称" style="width: 200px;" @keyup.enter.native="toQuery" />
         <el-input v-model="query.relatedName" size="mini" clearable placeholder="输入职能部门或机构名称" style="width: 200px;" @keyup.enter.native="toQuery" />
@@ -119,8 +120,8 @@
       </div>
     </div>
     <!--表单渲染-->
-    <el-dialog :visible.sync="mainFormMeta.visible" :title="mainFormMeta.title" width="800px">
-      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-position="right" label-width="150px">
+    <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="mainFormMeta.visible" :title="mainFormMeta.title" width="800px">
+      <el-form ref="editForm" :inline="true" :model="form" :rules="rules" size="small" label-position="right" label-width="150px">
         <div>
           <el-form-item label="涉及企业名称" prop="relatedName">
             <el-input v-model="form.relatedName" style="width: 200px" />
@@ -131,12 +132,16 @@
         </div>
         <div>
           <el-form-item label="审核状态" prop="reviewStatus">
-            <el-input v-model="form.reviewStatus" style="width: 200px" />
+            <el-select v-model="form.reviewStatus" size="small" placeholder="请选择审核状态" style="width: 200px">
+              <el-option label="编制" value="编制"></el-option>
+              <el-option label="撤回" value="撤回"></el-option>
+              <el-option label="退回" value="退回"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="上报状态" prop="reportStatus">
-            <el-select v-model="form.reportStatus" size="small" placeholder="涉及企业等级" style="width: 200px">
-              <el-option label="第一级" value="1"></el-option>
-              <el-option label="第二级" value="2"></el-option>
+            <el-select v-model="form.reportStatus" size="small" placeholder="请选择上报状态" style="width: 200px">
+              <el-option label="待上报" value="待上报"></el-option>
+              <el-option label="已上报" value="已上报"></el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -158,28 +163,28 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="toCancel">取消</el-button>
-        <el-button type="primary" @click="toConfirm">确认</el-button>
+        <el-button type="primary" @click="toConfirm('editForm')">确认</el-button>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="formMeta.visible" :title="formMeta.title" width="1100px">
-      <el-form ref="form" :inline="true" :model="subForm" :rules="subFormRules" size="small" label-position="right" label-width="150px">
+    <el-dialog append-to-body :close-on-click-modal="false" :visible.sync="subFormMeta.visible" :title="subFormMeta.title" width="1100px">
+      <el-form ref="subEditForm" :inline="true" :model="subForm" :rules="subFormRules" size="small" label-position="right" label-width="150px">
         <div>
           <el-form-item label="涉及企业名称" prop="eName">
             <el-input v-model="subForm.eName" style="width: 300px" />
           </el-form-item>
           <el-form-item label="涉及企业层级" prop="eLevel">
             <el-select v-model="subForm.eLevel" size="small" placeholder="涉及企业等级" style="width: 300px">
-              <el-option label="第一级" :value="1"></el-option>
-              <el-option label="第二级" :value="2"></el-option>
-              <el-option label="第三级" :value="3"></el-option>
-              <el-option label="第四级" :value="4"></el-option>
-              <el-option label="第五级" :value="5"></el-option>
+              <el-option label="第一级" :value="1" />
+              <el-option label="第二级" :value="2" />
+              <el-option label="第三级" :value="3" />
+              <el-option label="第四级" :value="4" />
+              <el-option label="第五级" :value="5" />
             </el-select>
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="风险事件名称" prop="eventName">
-            <el-input v-model="subForm.eventName" type="text" size="small" placeholder="风险事件名称" style="width: 300px"/>
+          <el-form-item label="风险事件名称" prop="riskName">
+            <el-input v-model="subForm.riskName" type="text" size="small" placeholder="风险事件名称" style="width: 300px"/>
           </el-form-item>
           <el-form-item label="事件发生时间" prop="time">
             <el-date-picker
@@ -218,7 +223,7 @@
         </div>
         <div>
           <el-form-item label="损失（风险）金额（万元）" prop="money">
-            <el-input v-model="subForm.money" style="width: 415px" />
+            <el-input v-model="subForm.money" type="Number" style="width: 415px" />
           </el-form-item>
         </div>
         <div>
@@ -272,12 +277,12 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="eventName" label="风险事件名称" />
+        <el-table-column prop="riskName" label="风险事件名称" />
         <el-table-column prop="rSubType" label="风险类别" />
         <el-table-column prop="time" label="事件发生时间" />
         <el-table-column prop="sDescription" label="当前情况描述" />
         <el-table-column prop="money" label="损失（风险）金额（万元）" />
-        <el-table-column prop="resubmitTime" label="续报时间" />
+        <el-table-column prop="subTime" label="续报时间" />
         <el-table-column prop="progress" label="处置进展情况" align="center">
           <template v-slot="scope">
             <el-tag type="info">正在处理</el-tag>
@@ -315,6 +320,7 @@
         :current-page.sync="subPage.pageNum"
         style="margin-top: 8px;"
         layout="total, prev, pager, next, sizes"
+        :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
         @size-change="subSizeChangeHandler"
         @current-change="subPageChangeHandler"
       />
@@ -333,15 +339,18 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="id" label="序号" width="125px" />
+      <el-table-column prop="id" label="序号" width="50px" />
       <el-table-column prop="reviewStatus" label="审核状态" align="center">
-        <template v-slot:default="scope">
-          <el-tag type="success">编制</el-tag>
+        <template v-slot="scope">
+          <el-tag v-if="scope.row.reviewStatus === '编制'" type="success">编制</el-tag>
+          <el-tag v-else-if="scope.row.reviewStatus === '退回'" type="error">退回</el-tag>
+          <el-tag v-else-if="scope.row.reviewStatus === '撤回'" type="warning">撤回</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="reportStatus" label="上报状态" align="center">
         <template v-slot="scope">
-          <el-tag type="success">待上报</el-tag>
+          <el-tag v-if="scope.row.reportStatus === '待上报'" type="info">待上报</el-tag>
+          <el-tag v-else-if="scope.row.reportStatus === '已上报'" type="success">已上报</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="relatedName" label="涉及企业名称(信用代码)" />
@@ -359,6 +368,7 @@
       :total="page.total"
       :current-page.sync="page.pageNum"
       style="margin-top: 8px;"
+      :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
       layout="total, prev, pager, next, sizes"
       @size-change="sizeChangeHandler"
       @current-change="pageChangeHandler"
@@ -368,10 +378,39 @@
 
 <script>
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-import { getAllProgressReportData } from '@/api/system/report'
+import {
+  addProgressReport, addSubProgress,
+  deleteProgressReport,
+  getAllProgressReportData,
+  getAllRiskType,
+  getAllSubProgress,
+  getProgressReportDataById, submitProgressReport, updateProgressReport, updateSubProgress, withdrawProgressReport
+} from '@/api/system/report'
 
 // crud交由presenter持有
-// const defaultForm = { id: null, title: null, menuSort: 999, path: null, component: null, componentName: null, iFrame: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null }
+const defaultForm = {
+  id: null,
+  reviewStatus: '编制',
+  reportStatus: '待上报',
+  relatedName: '',
+  thingName: '',
+  time: '',
+  progress: ''
+}
+const defaultSubForm = {
+  eName: '',
+  eLevel: 1,
+  riskName: '',
+  rCategory: '',
+  rSubType: '',
+  time: '',
+  isAbroad: 0,
+  isLawsuit: 1,
+  money: 0,
+  progress: '',
+  subTime: '',
+  sDescription: ''
+}
 export default {
   name: 'Report',
   data() {
@@ -388,12 +427,12 @@ export default {
         relatedName: ''
       },
       page: {
-        pageSize: 10,
+        pageSize: 5,
         total: 11,
         pageNum: 1
       },
       subPage: {
-        pageSize: 10,
+        pageSize: 5,
         total: 11,
         pageNum: 1
       },
@@ -473,7 +512,7 @@ export default {
           belongProgress: null,
           eName: '长沙市人民政府国有资产监督管理委员会',
           eLevel: 2,
-          eventName: '2024年度财务报告数据不确定风险事件',
+          riskName: '2024年度财务报告数据不确定风险事件',
           rCategory: '战略风险',
           rSubType: '宏观经济风险',
           time: '2024-04-10 10:00:00',
@@ -481,34 +520,60 @@ export default {
           isLawsuit: 1,
           money: 0,
           progress: '正在处理',
-          resubmitTime: '2024-05-21 15:54:55',
+          subTime: '2024-05-21 15:54:55',
           sDescription: ''
         }
       ],
       rules: {
-        title: [
-          { required: true, message: '请输入标题', trigger: 'blur' }
+        relatedName: [
+          { required: true, message: '请输入涉及企业名称', trigger: 'blur' }
         ],
-        path: [
-          { required: true, message: '请输入地址', trigger: 'blur' }
+        thingName: [
+          { required: true, message: '请输入事件名称', trigger: 'blur' }
+        ],
+        reviewStatus: [
+          { required: true, message: '请选择审核状态', trigger: 'blur' }
+        ],
+        reportStatus: [
+          { required: true, message: '请选择上报状态', trigger: 'blur' }
+        ],
+        time: [
+          { required: true, message: '请输入事件发生时间', trigger: 'blur' }
         ]
       },
       subFormRules: {
         eName: [
-          { required: true, message: '请输入公司名称', trigger: 'blur' }
+          { required: true, message: '请输入涉及企业名称', trigger: 'blur' }
+        ],
+        eLevel: [
+          { required: true, message: '请选择涉及企业层级', trigger: 'blur' }
+        ],
+        riskName: [
+          { required: true, message: '请输入风险事件名称', trigger: 'blur' }
+        ],
+        rCategory: [
+          { required: true, message: '请输入主风险类别', trigger: 'blur' }
+        ],
+        rSubType: [
+          { required: true, message: '请输入子风险类别', trigger: 'blur' }
+        ],
+        time: [
+          { required: true, message: '请输入事件发生时间', trigger: 'blur' }
         ]
+
       },
       searchOn: true,
       ids: [],
       single: false,
       multiple: false,
       allColumnsSelected: false,
-      formMeta: {
+      subFormMeta: {
         visible: false,
         title: '新增重大变化/进展编制'
       },
       mainFormMeta: {
         visible: false,
+        isEdit: false,
         title: '新增重大变化/进展续报'
       },
       form: {
@@ -523,7 +588,8 @@ export default {
       subForm: {
         eName: '长沙市人民政府国有资产监督管理委员会',
         eLevel: 3,
-        eventName: '2024年度财务报告数据不确定风险事件',
+        belongProgress: 1,
+        riskName: '2024年度财务报告数据不确定风险事件',
         rCategory: '',
         rSubType: '',
         time: '2024-04-10 10:00:00',
@@ -531,15 +597,13 @@ export default {
         isLawsuit: 1,
         money: 0,
         progress: '正在处理',
-        resubmitTime: '2024-05-21 15:54:55',
+        subTime: '2024-05-21 15:54:55',
         sDescription: ''
       }
     }
   },
   created() {
-    this.riskOptions.forEach(item => {
-      this.riskMap[item.id] = item.subRisks
-    })
+    this.getRiskTypeData()
     this.getMainData()
   },
   methods: {
@@ -551,7 +615,14 @@ export default {
     },
     getMainData() {
       this.loading = true
-      getAllProgressReportData().then(res => {
+      const query = {}
+      Object.keys(this.query).forEach(key => {
+        query[key] = this.query[key]
+      })
+      query['pageSize'] = this.page.pageSize
+      query['pageNum'] = this.page.pageNum
+      // console.log(query)
+      getAllProgressReportData(query).then(res => {
         if (res.code === 200) {
           this.data = res.data.records
           this.page.total = res.data.total
@@ -559,26 +630,47 @@ export default {
         }
       })
     },
-    getSubData() {
-
+    getSubData(id) {
+      this.subTableLoading = true
+      const query = {}
+      query.id = id
+      query.pageNum = this.subPage.pageNum
+      query.pageSize = this.subPage.pageSize
+      getAllSubProgress(query).then(res => {
+        if (res.code === 200) {
+          this.subData = res.data.records
+          this.subPage.total = res.data.total
+          this.subTableLoading = false
+        }
+      })
     },
     getRiskTypeData() {
-
+      getAllRiskType().then(res => {
+        if (res.code === 200) {
+          this.riskOptions = res.data
+          this.riskOptions.forEach(item => {
+            this.riskMap[item.id] = item.subRisks
+          })
+        }
+      })
     },
-    pageChangeHandler() {
-
+    pageChangeHandler(e) {
+      this.page.pageNum = e
+      this.getMainData()
     },
-    sizeChangeHandler() {
-
+    sizeChangeHandler(e) {
+      this.page.pageSize = e
+      this.page.pageNum = 1
+      this.getMainData()
     },
-    subPageChangeHandler() {
-
+    subPageChangeHandler(e) {
+      this.subPage.pageNum = e
+      this.getSubData(this.subForm.belongProgress)
     },
-    subSizeChangeHandler() {
-
-    },
-    load_data() {
-
+    subSizeChangeHandler(e) {
+      this.subPage.pageSize = e
+      this.subPage.pageNum = 1
+      this.getSubData(this.subForm.belongProgress)
     },
     resetQuery() {
       Object.keys(this.query).forEach(key => {
@@ -586,34 +678,151 @@ export default {
       })
     },
     toQuery() {
-
+      this.getMainData()
     },
     toEdit() {
-
+      this.mainFormMeta.title = '修改重大变化/进展编制'
+      this.mainFormMeta.visible = true
+      this.mainFormMeta.isEdit = true
+      if (this.ids.length !== 1) return
+      getProgressReportDataById(this.ids[0]).then(res => {
+        if (res.code === 200) {
+          this.form = res.data
+        }
+      })
     },
     toDelete() {
-
+      this.$confirm('是否确认删除编号为"' + this.ids + '"的数据项？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteProgressReport(this.ids).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '删除成功！'
+            })
+            this.getMainData()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除失败！'
+            })
+          }
+        })
+      })
     },
     toAdd() {
+      this.mainFormMeta.title = '新增重大变化/进展编制'
       this.mainFormMeta.visible = true
+      this.mainFormMeta.isEdit = false
+      Object.keys(this.form).forEach(key => {
+        this.form[key] = defaultForm[key]
+      })
     },
     toSubmit() {
-
+      this.$confirm('是否确认提交编号为"' + this.ids + '"的报告？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        submitProgressReport(this.ids).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '提交成功！'
+            })
+            this.getMainData()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '提交失败！'
+            })
+          }
+        })
+      })
     },
     toRollback() {
-
+      this.$confirm('是否确认撤销编号为"' + this.ids + '"的报告？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        withdrawProgressReport(this.ids).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '撤销成功！'
+            })
+            this.getMainData()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '撤销失败！'
+            })
+          }
+        })
+      })
     },
+    // 增加续报
     toResubmit() {
       if (this.subEditOn) {
-        Object.keys(this.subForm).forEach(key => {
-          this.subForm[key] = null
-        })
+        this.resetSubFormData()
+        this.$message.success('请重新填写表单')
       } else {
-        console.log('增加续报')
+        this.$refs['subEditForm'].validate(valid => {
+          if (valid) {
+            addSubProgress(this.subForm).then(res => {
+              if (res.code === 200) {
+                this.getSubData(this.subForm.belongProgress)
+                this.$message.success('新增续报成功')
+              } else {
+                this.$message.error('新增续报失败')
+              }
+            })
+          }
+        })
       }
       this.subEditOn = false
     },
-    toConfirm() {
+    toConfirm(editData) {
+      this.$refs[editData].validate(valid => {
+        if (valid) {
+          if (this.mainFormMeta.isEdit) {
+            updateProgressReport(this.form).then(res => {
+              if (res.code === 200) {
+                this.getMainData()
+                this.$message({
+                  type: 'success',
+                  message: '修改报告成功！'
+                })
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '修改报告失败！'
+                })
+              }
+            })
+          } else {
+            addProgressReport(this.form).then(res => {
+              if (res.code === 200) {
+                this.getMainData()
+                this.$message({
+                  type: 'success',
+                  message: '新增报告成功！'
+                })
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '新增报告失败！'
+                })
+              }
+            })
+          }
+          this.mainFormMeta.visible = false
+        }
+      })
       this.mainFormMeta.visible = false
     },
     toCancel() {
@@ -621,15 +830,40 @@ export default {
     },
     toSubEdit(index, row) {
       this.subEditOn = true
-      this.subForm.eventName = '公司'
+      Object.keys(row).forEach(key => {
+        this.subForm[key] = row[key]
+      })
+    },
+    // 重置主表单数据  进展报告
+    resetFormData() {
+      Object.keys(defaultForm).forEach(key => {
+        this.form[key] = defaultForm[key]
+      })
+    },
+    // 重置子表单数据 进展续报
+    resetSubFormData() {
+      Object.keys(defaultSubForm).forEach(key => {
+        this.subForm[key] = defaultSubForm[key]
+      })
     },
     toSubCancel() {
-      this.formMeta.visible = false
+      this.subFormMeta.visible = false
     },
     toSubConfirm() {
-      this.formMeta.visible = false
+      this.subFormMeta.visible = false
       if (this.subEditOn) {
-        console.log('修改续报成功')
+        this.$refs['subEditForm'].validate(valid => {
+          if (valid) {
+            updateSubProgress(this.subForm).then(res => {
+              if (res.code === 200) {
+                this.getSubData(this.subForm.belongProgress)
+                this.$message.success('修改续报成功')
+              } else {
+                this.$message.error('修改续报失败')
+              }
+            })
+          }
+        })
       }
     },
     toggleSearch() {
@@ -639,15 +873,10 @@ export default {
       this.getMainData()
     },
     handleDetailClick(index, row) {
-      this.formMeta.visible = true
-
-      /* if (row !== undefined && row !== 'undefined') {
-        this.formMeta.title = '编辑'
-        this.form.id = row.id
-      } else {
-        this.formMeta.title = '添加'
-        this.form.id = null
-      } */
+      this.subFormMeta.visible = true
+      this.resetSubFormData()
+      this.subForm.belongProgress = row.id
+      this.getSubData(row.id)
     },
 
     // 处理选中事件

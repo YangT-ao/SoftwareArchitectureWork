@@ -15,6 +15,7 @@ import me.zhengjie.modules.system.service.dto.SubRisk;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,12 +36,29 @@ public class BigChangesController {
     @Autowired
     SubRiskMapper subRiskMapper;
 
+    @GetMapping("/getDataById/{id}")
+    public Map<String, Object> getDataById(@PathVariable(name = "id") Integer id) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", 200);
+        ProgressReport res = progressReportMapper.selectById(id);
+        map.put("data", res);
+        return map;
+    }
+
     @GetMapping("/getAllData")
-    public Map<String, Object> getAllProgressReport(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "5") Integer pageSize){
+    public Map<String, Object> getAllProgressReport(@RequestParam(defaultValue = "") String reviewStatus,
+                                                    @RequestParam(defaultValue = "") String thingName,
+                                                    @RequestParam(defaultValue = "") String relatedName,
+                                                    @RequestParam(defaultValue = "1") Integer pageNum,
+                                                    @RequestParam(defaultValue = "5") Integer pageSize){
         Map<String, Object> map = new HashMap<>();
         map.put("code", 200);
         Page<ProgressReport> page = new Page<>(pageNum, pageSize);
-        progressReportMapper.selectPage(page, null);
+        LambdaQueryWrapper<ProgressReport> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(ProgressReport::getReviewStatus, reviewStatus);
+        queryWrapper.like(ProgressReport::getThingName, thingName);
+        queryWrapper.like(ProgressReport::getRelatedName, relatedName);
+        progressReportMapper.selectPage(page, queryWrapper);
         map.put("data", page);
         return map;
     }
@@ -90,6 +108,7 @@ public class BigChangesController {
     @PostMapping("/addSubData")
     public Map<String, Object> addSubData(@RequestBody BigChanges bigChanges){
         Map<String, Object> map = new HashMap<>();
+        bigChanges.setSubTime(new Date());
         int result = bigChangesMapper.insert(bigChanges);
         if(result == 1){
             map.put("code", 200);
@@ -134,8 +153,9 @@ public class BigChangesController {
     public Map<String, Object> withdraw(@RequestBody Integer[] ids){
         Map<String, Object> map = new HashMap<>();
         for(Integer id : ids){
+            System.out.println(id);
             LambdaUpdateWrapper<ProgressReport> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-            lambdaUpdateWrapper.set(ProgressReport::getReportStatus, "待上报").eq(ProgressReport::getId, id);
+            lambdaUpdateWrapper.set(ProgressReport::getReviewStatus, "撤回").eq(ProgressReport::getId, id);
             progressReportMapper.update(new ProgressReport(), lambdaUpdateWrapper);
         }
         map.put("code", 200);
