@@ -27,6 +27,8 @@ public class BigChanges {
 
     Date time;
 
+    Date subTime;
+
     Integer isAbroad;
 
     Integer isLawsuit;

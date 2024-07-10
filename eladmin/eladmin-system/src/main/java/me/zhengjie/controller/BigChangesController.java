@@ -117,70 +117,58 @@ public class BigChangesController {
         return map;
     }
 
-    @GetMapping("/submit")
-    public Map<String, Object> submit(@RequestParam Integer id){
+    @PostMapping("/submit")
+    public Map<String, Object> submit(@RequestBody Integer[] ids){
         Map<String, Object> map = new HashMap<>();
-        LambdaUpdateWrapper<ProgressReport> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-        lambdaUpdateWrapper.set(ProgressReport::getReportStatus, "已上报").eq(ProgressReport::getId, id);
-        int result = progressReportMapper.update(new ProgressReport(), lambdaUpdateWrapper);
-        if(result == 1){
-            map.put("code", 200);
-            map.put("msg", "修改成功");
-        }else{
-            map.put("code", -1);
-            map.put("msg", "修改失败");
+        for(Integer id : ids){
+            LambdaUpdateWrapper<ProgressReport> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            lambdaUpdateWrapper.set(ProgressReport::getReportStatus, "已上报").eq(ProgressReport::getId, id);
+            progressReportMapper.update(new ProgressReport(), lambdaUpdateWrapper);
         }
+        map.put("code", 200);
+        map.put("msg", "修改成功");
         return map;
     }
 
-    @GetMapping("/withdraw")
-    public Map<String, Object> withdraw(@RequestParam Integer id){
+    @PostMapping("/withdraw")
+    public Map<String, Object> withdraw(@RequestBody Integer[] ids){
         Map<String, Object> map = new HashMap<>();
-        LambdaUpdateWrapper<ProgressReport> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-        lambdaUpdateWrapper.set(ProgressReport::getReportStatus, "待上报").eq(ProgressReport::getId, id);
-        int result = progressReportMapper.update(new ProgressReport(), lambdaUpdateWrapper);
-        if(result == 1){
-            map.put("code", 200);
-            map.put("msg", "修改成功");
-        }else{
-            map.put("code", -1);
-            map.put("msg", "修改失败");
+        for(Integer id : ids){
+            LambdaUpdateWrapper<ProgressReport> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            lambdaUpdateWrapper.set(ProgressReport::getReportStatus, "待上报").eq(ProgressReport::getId, id);
+            progressReportMapper.update(new ProgressReport(), lambdaUpdateWrapper);
         }
+        map.put("code", 200);
+        map.put("msg", "修改成功");
         return map;
     }
 
-    @GetMapping("/deleteProgressReport")
-    public Map<String, Object> deleteProgressReport(@RequestParam Integer id){
+    @PostMapping("/deleteProgressReport")
+    public Map<String, Object> deleteProgressReport(@RequestBody Integer[] ids){
         Map<String, Object> map = new HashMap<>();
-        LambdaQueryWrapper<ProgressReport> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(ProgressReport::getId, id);
-        int result1 = progressReportMapper.delete(lambdaQueryWrapper);
-        LambdaQueryWrapper<BigChanges> lambdaQueryWrapper2 = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper2.eq(BigChanges::getBelongProgress, id);
-        int result2 = bigChangesMapper.delete(lambdaQueryWrapper2);
-        if(result1 == 1 && result2 >= 0){
-            map.put("code", 200);
-            map.put("msg", "修改成功");
-        }else{
-            map.put("code", -1);
-            map.put("msg", "修改失败");
+        for(Integer id : ids){
+            LambdaQueryWrapper<ProgressReport> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(ProgressReport::getId, id);
+            progressReportMapper.delete(lambdaQueryWrapper);
+            LambdaQueryWrapper<BigChanges> lambdaQueryWrapper2 = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper2.eq(BigChanges::getBelongProgress, id);
+            bigChangesMapper.delete(lambdaQueryWrapper2);
         }
+        map.put("code", 200);
+        map.put("msg", "修改成功");
         return map;
     }
 
-    @GetMapping("/deleteBigChanges")
-    public Map<String, Object> deleteBigChanges(@RequestParam Integer id){
+    @PostMapping("/deleteBigChanges")
+    public Map<String, Object> deleteBigChanges(@RequestBody Integer[] ids){
         Map<String, Object> map = new HashMap<>();
-        LambdaQueryWrapper<BigChanges> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(BigChanges::getId, id);
-        int result = bigChangesMapper.delete(lambdaQueryWrapper);
-        if(result == 1){
-            map.put("code", 200);
-            map.put("msg", "修改成功");
-        }else{
-            map.put("code", -1);
-            map.put("msg", "修改失败");
+        for(Integer id : ids){
+            LambdaQueryWrapper<BigChanges> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(BigChanges::getId, id);
+            int result = bigChangesMapper.delete(lambdaQueryWrapper);
         }
+        map.put("code", 200);
+        map.put("msg", "修改成功");
         return map;
     }
 
