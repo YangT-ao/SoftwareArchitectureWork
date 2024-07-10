@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 10/07/2024 15:44:54
+ Date: 10/07/2024 16:28:26
 */
 
 SET NAMES utf8mb4;
@@ -47,7 +47,7 @@ INSERT INTO `big_changes` VALUES (2, '长沙市中医院', 1, '2024年财务数�
 INSERT INTO `big_changes` VALUES (3, '长沙企业联合会', 3, '2024年财务数据不准确', '2024-03-26 00:00:00', 1, 1, 1, 3, 25000, '待处理', '好', 1);
 INSERT INTO `big_changes` VALUES (4, '长沙市中心医院', 1, '2024年财务数据不准确', '2024-04-05 00:00:00', 1, 1, 1, 1, 40000, '正在处理', '好', 1);
 INSERT INTO `big_changes` VALUES (5, '长沙市社保局', 2, '2024年财务数据不准确', '2024-04-09 00:00:00', 1, 1, 1, 2, 35000, '正在处理', '好', 1);
-INSERT INTO `big_changes` VALUES (6, '长沙市人力资源局', 1, '2024年财务数据不准确', '2024-04-18 00:00:00', 1, 1, 1, NULL, 15000, '待处理', '好', 1);
+INSERT INTO `big_changes` VALUES (6, '长沙市人力资源局', 1, '2024年财务数据不准确', '2024-04-18 00:00:00', 1, 1, 1, 3, 15000, '待处理', '好', 1);
 
 -- ----------------------------
 -- Table structure for code_column_config
