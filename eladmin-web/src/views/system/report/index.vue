@@ -8,7 +8,7 @@
           <el-option label="区域一" value="shanghai"></el-option>
           <el-option label="区域二" value="beijing"></el-option>
         </el-select>
-        <el-input v-model="query.eventName" size="mini" clearable placeholder="事件名称" style="width: 200px;" @keyup.enter.native="toQuery" />
+        <el-input v-model="query.thingName" size="mini" clearable placeholder="事件名称" style="width: 200px;" @keyup.enter.native="toQuery" />
         <el-input v-model="query.relatedName" size="mini" clearable placeholder="输入职能部门或机构名称" style="width: 200px;" @keyup.enter.native="toQuery" />
         <el-button size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
         <el-button size="mini" type="warning" icon="el-icon-refresh-left" @click="resetQuery()">重置</el-button>
@@ -125,8 +125,8 @@
           <el-form-item label="涉及企业名称" prop="relatedName">
             <el-input v-model="form.relatedName" style="width: 200px" />
           </el-form-item>
-          <el-form-item label="事件名称" prop="eventName">
-            <el-input v-model="form.eventName" style="width: 200px" />
+          <el-form-item label="事件名称" prop="thingName">
+            <el-input v-model="form.thingName" style="width: 200px" />
           </el-form-item>
         </div>
         <div>
@@ -141,9 +141,9 @@
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="事件发生时间" prop="happenTime">
+          <el-form-item label="事件发生时间" prop="time">
             <el-date-picker
-              v-model="form.happenTime"
+              v-model="form.time"
               style="width: 200px"
               type="datetime"
               placeholder="选择日期时间">
@@ -164,26 +164,26 @@
     <el-dialog :visible.sync="formMeta.visible" :title="formMeta.title" width="1100px">
       <el-form ref="form" :inline="true" :model="subForm" :rules="subFormRules" size="small" label-position="right" label-width="150px">
         <div>
-          <el-form-item label="涉及企业名称" prop="companyName">
-            <el-input v-model="subForm.companyName" style="width: 300px" />
+          <el-form-item label="涉及企业名称" prop="eName">
+            <el-input v-model="subForm.eName" style="width: 300px" />
           </el-form-item>
-          <el-form-item label="涉及企业层级" prop="companyLevel">
-            <el-select v-model="subForm.companyLevel" size="small" placeholder="涉及企业等级" style="width: 300px">
-              <el-option label="第一级" value="1"></el-option>
-              <el-option label="第二级" value="2"></el-option>
+          <el-form-item label="涉及企业层级" prop="eLevel">
+            <el-select v-model="subForm.eLevel" size="small" placeholder="涉及企业等级" style="width: 300px">
+              <el-option label="第一级" :value="1"></el-option>
+              <el-option label="第二级" :value="2"></el-option>
+              <el-option label="第三级" :value="3"></el-option>
+              <el-option label="第四级" :value="4"></el-option>
+              <el-option label="第五级" :value="5"></el-option>
             </el-select>
           </el-form-item>
         </div>
         <div>
           <el-form-item label="风险事件名称" prop="eventName">
-            <el-select v-model="subForm.eventName" size="small" placeholder="风险事件名称" style="width: 300px">
-              <el-option label="某某事件1" value="某某事件1"></el-option>
-              <el-option label="某某事件2" value="某某事件1"></el-option>
-            </el-select>
+            <el-input v-model="subForm.eventName" type="text" size="small" placeholder="风险事件名称" style="width: 300px"/>
           </el-form-item>
-          <el-form-item label="事件发生时间" prop="happenTime">
+          <el-form-item label="事件发生时间" prop="time">
             <el-date-picker
-              v-model="subForm.happenTime"
+              v-model="subForm.time"
               style="width: 300px"
               type="datetime"
               placeholder="选择日期时间">
@@ -191,36 +191,34 @@
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="是否境外" prop="eventPlace" style="width: 450px">
-            <el-radio-group v-model="subForm.eventPlace">
-              <el-radio label="境内">境内</el-radio>
-              <el-radio label="境外">境外</el-radio>
+          <el-form-item label="是否境外" prop="isAbroad" style="width: 450px">
+            <el-radio-group v-model="subForm.isAbroad">
+              <el-radio :label="0">境内</el-radio>
+              <el-radio :label="1">境外</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="是否涉诉" prop="appeal">
-            <el-radio-group v-model="subForm.appeal">
-              <el-radio label="涉诉">涉诉</el-radio>
-              <el-radio label="不涉诉">不涉诉</el-radio>
+          <el-form-item label="是否涉诉" prop="isLawsuit">
+            <el-radio-group v-model="subForm.isLawsuit">
+              <el-radio :label="1">涉诉</el-radio>
+              <el-radio :label="0">不涉诉</el-radio>
             </el-radio-group>
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="风险类别" prop="riskType1">
-            <el-select v-model="subForm.riskType1" size="small" placeholder="风险类别1" style="width: 200px; margin-right: 10px">
-              <el-option label="战略风险" value="某某事件1"></el-option>
-              <el-option label="某某事件2" value="某某事件1"></el-option>
+          <el-form-item label="风险类别" prop="rCategory">
+            <el-select v-model="subForm.rCategory" size="small" placeholder="主风险类别" @change="riskTypeSelectChange" style="width: 200px; margin-right: 10px">
+              <el-option v-for="item in riskOptions" :key="item.id" :label="item.rType" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="" prop="riskType2">
-            <el-select v-model="subForm.riskType2" size="small" placeholder="风险类别2" style="width: 200px;">
-              <el-option label="宏观经济风险" value="宏观经济风险"></el-option>
-              <el-option label="某某事件2" value="某某事件2"></el-option>
+          <el-form-item label="" prop="rSubType">
+            <el-select v-model="subForm.rSubType" size="small" placeholder="子风险类别" style="width: 200px;">
+              <el-option v-for="item in subRiskOptions" :key="item.id" :label="item.rSubType" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="损失（风险）金额（万元）" prop="lossMoney">
-            <el-input v-model="subForm.lossMoney" style="width: 415px" />
+          <el-form-item label="损失（风险）金额（万元）" prop="money">
+            <el-input v-model="subForm.money" style="width: 415px" />
           </el-form-item>
         </div>
         <div>
@@ -229,8 +227,8 @@
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="当前情况描述" prop="currentSituation">
-            <el-input v-model="subForm.currentSituation" type="textarea" style="width: 415px" :autosize="{ minRows: 3}"></el-input>
+          <el-form-item label="当前情况描述" prop="sDescription">
+            <el-input v-model="subForm.sDescription" type="textarea" style="width: 415px" :autosize="{ minRows: 3}"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -254,23 +252,59 @@
         :highlight-current-row="true"
       >
         <el-table-column prop="id" label="序号" />
-        <el-table-column prop="companyName" label="涉及企业名称(信用代码)" />
-        <el-table-column prop="companyLevel" label="涉及企业层级" />
+        <el-table-column prop="eName" label="涉及企业名称(信用代码)" />
+        <el-table-column prop="eLevel" label="涉及企业层级">
+          <template v-slot="scope">
+            <span v-if="scope.row.eLevel === 1">
+              第一级
+            </span>
+            <span v-else-if="scope.row.eLevel === 2">
+              第二级
+            </span>
+            <span v-else-if="scope.row.eLevel === 3">
+              第三级
+            </span>
+            <span v-else-if="scope.row.eLevel === 4">
+              第四级
+            </span>
+            <span v-else-if="scope.row.eLevel === 5">
+              第五级
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column prop="eventName" label="风险事件名称" />
-        <el-table-column prop="riskType2" label="风险类别" />
-        <el-table-column prop="happenTime" label="事件发生时间" />
-        <el-table-column prop="currentSituation" label="当前情况描述" />
-        <el-table-column prop="lossMoney" label="损失（风险）金额（万元）" />
+        <el-table-column prop="rSubType" label="风险类别" />
+        <el-table-column prop="time" label="事件发生时间" />
+        <el-table-column prop="sDescription" label="当前情况描述" />
+        <el-table-column prop="money" label="损失（风险）金额（万元）" />
         <el-table-column prop="resubmitTime" label="续报时间" />
         <el-table-column prop="progress" label="处置进展情况" align="center">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-tag type="info">正在处理</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="eventPlace" label="是否境外" />
-        <el-table-column prop="appeal" label="是否涉诉" />
+        <el-table-column prop="isAbroad" label="是否境外">
+          <template v-slot="scope">
+            <span v-if="scope.row.isAbroad === 1">
+              境外
+            </span>
+            <span v-else-if="scope.row.isAbroad === 0">
+              境内
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="isLawsuit" label="是否涉诉">
+          <template v-slot="scope">
+            <span v-if="scope.row.isLawsuit === 1">
+              涉诉
+            </span>
+            <span v-else-if="scope.row.isLawsuit === 0">
+              不涉诉
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="130px" align="center" fixed="right">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-button size="small" icon="el-icon-edit-outline" type="primary" @click="toSubEdit(scope.$index, scope.row)">修改</el-button>
           </template>
         </el-table-column>
@@ -306,16 +340,16 @@
         </template>
       </el-table-column>
       <el-table-column prop="reportStatus" label="上报状态" align="center">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tag type="success">待上报</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="relatedName" label="涉及企业名称(信用代码)" />
-      <el-table-column prop="eventName" label="事件名称" />
-      <el-table-column prop="happenTime" label="事件发生时间" />
+      <el-table-column prop="thingName" label="事件名称" />
+      <el-table-column prop="time" label="事件发生时间" />
       <el-table-column prop="progress" label="处置进展情况" />
       <el-table-column v-if="checkPer(['admin','menu:edit','menu:del'])" label="操作" width="130px" align="center" fixed="right">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button size="small" icon="el-icon-tickets" type="primary" @click="handleDetailClick(scope.$index, scope.row)">详情</el-button>
         </template>
       </el-table-column>
@@ -334,6 +368,7 @@
 
 <script>
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import { getAllProgressReportData } from '@/api/system/report'
 
 // crud交由presenter持有
 // const defaultForm = { id: null, title: null, menuSort: 999, path: null, component: null, componentName: null, iFrame: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null }
@@ -349,7 +384,7 @@ export default {
       },
       query: {
         reviewStatus: '',
-        eventName: '',
+        thingName: '',
         relatedName: ''
       },
       page: {
@@ -371,32 +406,83 @@ export default {
       resubmitLoading: false,
       tableColumns: [],
       subEditOn: false,
+      riskOptions: [
+        {
+          'id': 1,
+          'rType': '战略风险',
+          'subRisks': [
+            {
+              'belongType': 1,
+              'id': 1,
+              'rSubType': '宏观经济风险'
+            },
+            {
+              'belongType': 1,
+              'id': 2,
+              'rSubType': '政策性风险'
+            },
+            {
+              'belongType': 1,
+              'id': 3,
+              'rSubType': '领导力风险'
+            }
+          ]
+        },
+        {
+          'id': 2,
+          'rType': '运营风险',
+          'subRisks': [
+            {
+              'belongType': 2,
+              'id': 4,
+              'rSubType': '生产风险'
+            },
+            {
+              'belongType': 2,
+              'id': 5,
+              'rSubType': '财务风险'
+            },
+            {
+              'belongType': 2,
+              'id': 6,
+              'rSubType': '安全风险'
+            }
+          ]
+        }
+      ],
+      subRiskOptions: [
+
+      ],
+      riskMap: {
+        1: []
+      },
       data: [
         {
           id: 1,
           reviewStatus: '编制',
           reportStatus: '待上报',
           relatedName: '长沙市人民政府国有资产监督管理委员会',
-          eventName: '风险事件名称',
-          happenTime: '2021-01-01',
+          thingName: '风险事件名称',
+          time: '2021-01-01',
           progress: '处置进展情况'
         }
       ],
       subData: [
         {
           id: 1,
-          companyName: '长沙市人民政府国有资产监督管理委员会',
-          companyLevel: '第一级',
+          belongProgress: null,
+          eName: '长沙市人民政府国有资产监督管理委员会',
+          eLevel: 2,
           eventName: '2024年度财务报告数据不确定风险事件',
-          riskType1: '战略风险',
-          riskType2: '宏观经济风险',
-          happenTime: '2024-04-10 10:00:00',
-          eventPlace: '境内',
-          appeal: '涉诉',
-          lossMoney: 0,
-          handleProgress: '正在处理',
+          rCategory: '战略风险',
+          rSubType: '宏观经济风险',
+          time: '2024-04-10 10:00:00',
+          isAbroad: 0,
+          isLawsuit: 1,
+          money: 0,
+          progress: '正在处理',
           resubmitTime: '2024-05-21 15:54:55',
-          currentSituation: ''
+          sDescription: ''
         }
       ],
       rules: {
@@ -408,7 +494,7 @@ export default {
         ]
       },
       subFormRules: {
-        companyName: [
+        eName: [
           { required: true, message: '请输入公司名称', trigger: 'blur' }
         ]
       },
@@ -430,27 +516,55 @@ export default {
         reviewStatus: '编制',
         reportStatus: '待上报',
         relatedName: '长沙市人民政府国有资产监督管理委员会',
-        eventName: '风险事件名称',
-        happenTime: '2021-01-01',
+        thingName: '风险事件名称',
+        time: '2021-01-01',
         progress: '处置进展情况'
       },
       subForm: {
-        companyName: '长沙市人民政府国有资产监督管理委员会',
-        companyLevel: '第一级',
+        eName: '长沙市人民政府国有资产监督管理委员会',
+        eLevel: 3,
         eventName: '2024年度财务报告数据不确定风险事件',
-        riskType1: '战略风险',
-        riskType2: '宏观经济风险',
-        happenTime: '2024-04-10 10:00:00',
-        eventPlace: '境内',
-        appeal: '涉诉',
-        lossMoney: 0,
-        handleProgress: '正在处理',
+        rCategory: '',
+        rSubType: '',
+        time: '2024-04-10 10:00:00',
+        isAbroad: 1,
+        isLawsuit: 1,
+        money: 0,
+        progress: '正在处理',
         resubmitTime: '2024-05-21 15:54:55',
-        currentSituation: ''
+        sDescription: ''
       }
     }
   },
+  created() {
+    this.riskOptions.forEach(item => {
+      this.riskMap[item.id] = item.subRisks
+    })
+    this.getMainData()
+  },
   methods: {
+    riskTypeSelectChange(value) {
+      this.subRiskOptions = this.riskMap[value]
+      // console.log(this.subRiskOptions)
+      // console.log(this.subForm)
+      this.subForm.rSubType = null
+    },
+    getMainData() {
+      this.loading = true
+      getAllProgressReportData().then(res => {
+        if (res.code === 200) {
+          this.data = res.data.records
+          this.page.total = res.data.total
+          this.loading = false
+        }
+      })
+    },
+    getSubData() {
+
+    },
+    getRiskTypeData() {
+
+    },
     pageChangeHandler() {
 
     },
@@ -522,10 +636,11 @@ export default {
       this.searchOn = !this.searchOn
     },
     refresh() {
-      this.load_data()
+      this.getMainData()
     },
     handleDetailClick(index, row) {
       this.formMeta.visible = true
+
       /* if (row !== undefined && row !== 'undefined') {
         this.formMeta.title = '编辑'
         this.form.id = row.id

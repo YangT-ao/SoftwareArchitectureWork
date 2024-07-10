@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/bigchanges")
+@RequestMapping("/api/bigchanges")
 public class BigChangesController {
 
     @Autowired
