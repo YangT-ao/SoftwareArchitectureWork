@@ -253,7 +253,7 @@
         :border="true"
         :data="subData"
         row-key="id"
-        style="margin-top: 15px"
+        style="margin-top: 15px; text-align: center"
         :highlight-current-row="true"
       >
         <el-table-column prop="id" label="序号" />
@@ -278,14 +278,23 @@
           </template>
         </el-table-column>
         <el-table-column prop="riskName" label="风险事件名称" />
-        <el-table-column prop="rSubType" label="风险类别" />
+        <el-table-column prop="rCategory" label="主风险类别">
+          <template v-slot="scope">
+            {{ riskTypeId2Name[scope.row.rCategory] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="rSubType" label="子风险类别">
+          <template v-slot="scope">
+            {{ subRiskTypeId2Name[scope.row.rSubType] }}
+          </template>
+        </el-table-column>
         <el-table-column prop="time" label="事件发生时间" />
         <el-table-column prop="sDescription" label="当前情况描述" />
         <el-table-column prop="money" label="损失（风险）金额（万元）" />
         <el-table-column prop="subTime" label="续报时间" />
         <el-table-column prop="progress" label="处置进展情况" align="center">
           <template v-slot="scope">
-            <el-tag type="info">正在处理</el-tag>
+            <el-tag v-if="scope.row.progress" type="info">{{ scope.row.progress }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="isAbroad" label="是否境外">
@@ -495,6 +504,12 @@ export default {
       riskMap: {
         1: []
       },
+      riskTypeId2Name: {
+        1: ''
+      },
+      subRiskTypeId2Name: {
+        1: ''
+      },
       data: [
         {
           id: 1,
@@ -650,6 +665,10 @@ export default {
           this.riskOptions = res.data
           this.riskOptions.forEach(item => {
             this.riskMap[item.id] = item.subRisks
+            this.riskTypeId2Name[item.id] = item.rType
+            item.subRisks.forEach(item => {
+              this.subRiskTypeId2Name[item.id] = item.rSubType
+            })
           })
         }
       })
@@ -703,6 +722,7 @@ export default {
               type: 'success',
               message: '删除成功！'
             })
+            this.page.pageNum = 1
             this.getMainData()
           } else {
             this.$message({
@@ -823,13 +843,14 @@ export default {
           this.mainFormMeta.visible = false
         }
       })
-      this.mainFormMeta.visible = false
     },
     toCancel() {
       this.mainFormMeta.visible = false
     },
     toSubEdit(index, row) {
       this.subEditOn = true
+      // 更新子风险类别选项
+      this.riskTypeSelectChange(row.rCategory)
       Object.keys(row).forEach(key => {
         this.subForm[key] = row[key]
       })

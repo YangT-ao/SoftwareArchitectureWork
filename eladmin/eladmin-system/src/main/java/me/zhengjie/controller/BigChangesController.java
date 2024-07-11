@@ -153,7 +153,7 @@ public class BigChangesController {
     public Map<String, Object> withdraw(@RequestBody Integer[] ids){
         Map<String, Object> map = new HashMap<>();
         for(Integer id : ids){
-            System.out.println(id);
+//            System.out.println(id);
             LambdaUpdateWrapper<ProgressReport> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
             lambdaUpdateWrapper.set(ProgressReport::getReviewStatus, "撤回").eq(ProgressReport::getId, id);
             progressReportMapper.update(new ProgressReport(), lambdaUpdateWrapper);
